@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CupcakeOrdersMapper {
-
     public static List<CupcakeOrders> getOrdersByOrderId(int orderId, ConnectionPool connectionPool)
             throws DatabaseException {
 
@@ -42,7 +41,9 @@ public class CupcakeOrdersMapper {
                         rs.getInt("cupcake_id"),
                         rs.getInt("order_id"),
                         rs.getInt("quantity"),
-                        rs.getDouble("unit_price")
+                        rs.getDouble("unit_price"),
+                        rs.getString("bottom_name"),
+                        rs.getString("topping_name")
                 ));
             }
 
@@ -50,6 +51,32 @@ public class CupcakeOrdersMapper {
 
         } catch (SQLException e) {
             throw new DatabaseException("Error fetching order items", e.getMessage());
+        }
+    }
+
+    public static double calculateTotal(int orderId, ConnectionPool connectionPool)
+            throws DatabaseException {
+
+        String sql = """
+        SELECT SUM(quantity * unit_price) AS total
+        FROM public.cupcakes_orders
+        WHERE order_id = ?
+    """;
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, orderId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getDouble("total");
+            }
+
+            return 0;
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Error calculating total", e.getMessage());
         }
     }
 }
