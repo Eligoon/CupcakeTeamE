@@ -15,10 +15,20 @@ public class CupcakeOrdersMapper {
         List<CupcakeOrders> items = new ArrayList<>();
 
         String sql = """
-            SELECT id, cupcake_id, order_id, quantity, unit_price
-            FROM public.cupcakes_orders
-            WHERE order_id = ?
-        """;
+        SELECT 
+            co.id,
+            co.cupcake_id,
+            co.order_id,
+            co.quantity,
+            co.unit_price,
+            b.name AS bottom_name,
+            t.name AS topping_name
+        FROM public.cupcakes_orders co
+        JOIN public.cupcakes c ON co.cupcake_id = c.cupcake_id
+        JOIN public.bottoms b ON c.bottom_id = b.bottom_id
+        JOIN public.toppings t ON c.topping_id = t.topping_id
+        WHERE co.order_id = ?
+    """;
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {

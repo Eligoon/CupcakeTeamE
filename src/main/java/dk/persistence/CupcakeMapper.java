@@ -15,9 +15,18 @@ public class CupcakeMapper {
         List<Cupcake> cupcakes = new ArrayList<>();
 
         String sql = """
-            SELECT cupcake_id, bottom_id, topping_id
-            FROM public.cupcakes
-        """;
+        SELECT 
+            c.cupcake_id,
+            c.bottom_id,
+            c.topping_id,
+            b.name AS bottom_name,
+            b.price AS bottom_price,
+            t.name AS topping_name,
+            t.price AS topping_price
+        FROM public.cupcakes c
+        JOIN public.bottoms b ON c.bottom_id = b.bottom_id
+        JOIN public.toppings t ON c.topping_id = t.topping_id
+    """;
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
