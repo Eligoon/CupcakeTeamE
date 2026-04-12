@@ -92,4 +92,105 @@ public class OrderMapper {
             throw new DatabaseException("Error marking order as paid", e.getMessage());
         }
     }
+
+    public static boolean isPaid(int orderId, ConnectionPool connectionPool)
+            throws DatabaseException {
+
+        String sql = """
+        SELECT status
+        FROM public.orders
+        WHERE order_id = ?
+    """;
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, orderId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return "paid".equals(rs.getString("status"));
+            }
+
+            throw new DatabaseException("Order not found");
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Error checking order status", e.getMessage());
+        }
+    }
+
+    public static int createOrder(int userId, ConnectionPool connectionPool)
+            throws DatabaseException {
+
+        String sql = """
+        INSERT INTO public.orders (user_id, status)
+        VALUES (?, 'cart')
+        RETURNING order_id
+    """;
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("order_id");
+            }
+
+            throw new DatabaseException("Could not create order");
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Error creating order", e.getMessage());
+        }
+    }
+
+    public static void addCupcakeToOrder(int orderId, int cupcakeId, int quantity, double unitPrice, ConnectionPool connectionPool)
+            throws DatabaseException {
+
+        String sql = """
+        INSERT INTO public.cupcakes_orders (order_id, cupcake_id, quantity, unit_price)
+        VALUES (?, ?, ?, ?)
+    """;
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, orderId);
+            ps.setInt(2, cupcakeId);
+            ps.setInt(3, quantity);
+            ps.setDouble(4, unitPrice);
+
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Error adding cupcake to order", e.getMessage());
+        }
+    }
+
+    public static double calculateTotal(int orderId, ConnectionPool connectionPool)
+            throws DatabaseException {
+
+        String sql = """
+        SELECT SUM(quantity * unit_price) AS total
+        FROM public.cupcakes_orders
+        WHERE order_id = ?
+    """;
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, orderId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getDouble("total");
+            }
+
+            return 0;
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Error calculating total", e.getMessage());
+        }
+    }
 }

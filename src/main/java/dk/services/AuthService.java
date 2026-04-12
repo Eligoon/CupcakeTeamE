@@ -14,7 +14,6 @@ public class AuthService {
             throw new Exception("User not found");
         }
 
-
         if (!user.getPasswordHash().equals(password)) {
             throw new Exception("Wrong password");
         }
