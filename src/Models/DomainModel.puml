@@ -1,0 +1,56 @@
+@startuml
+
+class User {
+    int userId
+    String email
+    String passwordHash
+    String role
+}
+
+class Account {
+    int accountId
+    double balance
+}
+
+class Order {
+    int orderId
+    LocalDateTime createdAt
+    String status
+}
+
+class Cupcake {
+    int cupcakeId
+}
+
+class Bottom {
+    int bottomId
+    String name
+    double price
+}
+
+class Topping {
+    int toppingId
+    String name
+    double price
+}
+
+class CupcakeOrders {
+    int id
+    int quantity
+    double unitPrice
+}
+
+
+' RELATIONS
+
+User "1" -- "1" Account
+User "1" -- "*" Order
+
+Order "1" -- "*" CupcakeOrders
+
+CupcakeOrders "*" -- "1" Cupcake
+
+Cupcake "*" -- "1" Bottom
+Cupcake "*" -- "1" Topping
+
+@enduml
