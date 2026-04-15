@@ -71,4 +71,24 @@ public class AccountMapper {
             throw new DatabaseException("Error subtracting money", e.getMessage());
         }
     }
+
+    public static void createAccount(int userId, double balance, ConnectionPool connectionPool)
+            throws DatabaseException {
+
+        String sql = """
+        INSERT INTO public.accounts (user_id, balance)
+        VALUES (?, ?)
+    """;
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            ps.setDouble(2, balance);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Error creating account", e.getMessage());
+        }
+    }
 }

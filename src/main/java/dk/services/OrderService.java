@@ -10,9 +10,11 @@ public class OrderService {
         return OrderMapper.createOrder(userId, cp);
     }
 
-    public static void addCupcakeToOrder(int orderId, int cupcakeId, int quantity, double unitPrice, ConnectionPool cp)
+
+    public static void addCupcakeToOrder(int orderId, int cupcakeId, int quantity, ConnectionPool cp)
             throws DatabaseException {
-        OrderMapper.addCupcakeToOrder(orderId, cupcakeId, quantity, unitPrice, cp);
+
+        OrderMapper.addCupcakeToOrder(orderId, cupcakeId, quantity, cp);
     }
 
     public static double calculateTotal(int orderId, ConnectionPool cp)

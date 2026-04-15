@@ -48,9 +48,9 @@ public class OrderMapper {
         List<Order> orders = new ArrayList<>();
 
         String sql = """
-        SELECT order_id, user_id, created_at, status
-        FROM public.orders
-    """;
+            SELECT order_id, user_id, created_at, status
+            FROM public.orders
+        """;
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -73,60 +73,14 @@ public class OrderMapper {
         }
     }
 
-    public static void markAsPaid(int orderId, ConnectionPool connectionPool)
-            throws DatabaseException {
-
-        String sql = """
-        UPDATE public.orders
-        SET status = 'paid'
-        WHERE order_id = ?
-    """;
-
-        try (Connection connection = connectionPool.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
-
-            ps.setInt(1, orderId);
-            ps.executeUpdate();
-
-        } catch (SQLException e) {
-            throw new DatabaseException("Error marking order as paid", e.getMessage());
-        }
-    }
-
-    public static boolean isPaid(int orderId, ConnectionPool connectionPool)
-            throws DatabaseException {
-
-        String sql = """
-        SELECT status
-        FROM public.orders
-        WHERE order_id = ?
-    """;
-
-        try (Connection connection = connectionPool.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
-
-            ps.setInt(1, orderId);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return "paid".equals(rs.getString("status"));
-            }
-
-            throw new DatabaseException("Order not found");
-
-        } catch (SQLException e) {
-            throw new DatabaseException("Error checking order status", e.getMessage());
-        }
-    }
-
     public static int createOrder(int userId, ConnectionPool connectionPool)
             throws DatabaseException {
 
         String sql = """
-        INSERT INTO public.orders (user_id, status)
-        VALUES (?, 'cart')
-        RETURNING order_id
-    """;
+            INSERT INTO public.orders (user_id, status)
+            VALUES (?, 'cart')
+            RETURNING order_id
+        """;
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -145,13 +99,18 @@ public class OrderMapper {
         }
     }
 
-    public static void addCupcakeToOrder(int orderId, int cupcakeId, int quantity, double unitPrice, ConnectionPool connectionPool)
+
+    public static void addCupcakeToOrder(int orderId, int cupcakeId, int quantity, ConnectionPool connectionPool)
             throws DatabaseException {
 
         String sql = """
-        INSERT INTO public.cupcakes_orders (order_id, cupcake_id, quantity, unit_price)
-        VALUES (?, ?, ?, ?)
-    """;
+            INSERT INTO public.cupcakes_orders (order_id, cupcake_id, quantity, unit_price)
+            SELECT ?, ?, ?, (b.price + t.price)
+            FROM public.cupcakes c
+            JOIN public.bottoms b ON c.bottom_id = b.bottom_id
+            JOIN public.toppings t ON c.topping_id = t.topping_id
+            WHERE c.cupcake_id = ?
+        """;
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -159,7 +118,7 @@ public class OrderMapper {
             ps.setInt(1, orderId);
             ps.setInt(2, cupcakeId);
             ps.setInt(3, quantity);
-            ps.setDouble(4, unitPrice);
+            ps.setInt(4, cupcakeId);
 
             ps.executeUpdate();
 
@@ -172,10 +131,10 @@ public class OrderMapper {
             throws DatabaseException {
 
         String sql = """
-        SELECT SUM(quantity * unit_price) AS total
-        FROM public.cupcakes_orders
-        WHERE order_id = ?
-    """;
+            SELECT SUM(quantity * unit_price) AS total
+            FROM public.cupcakes_orders
+            WHERE order_id = ?
+        """;
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -191,6 +150,52 @@ public class OrderMapper {
 
         } catch (SQLException e) {
             throw new DatabaseException("Error calculating total", e.getMessage());
+        }
+    }
+
+    public static void markAsPaid(int orderId, ConnectionPool connectionPool)
+            throws DatabaseException {
+
+        String sql = """
+            UPDATE public.orders
+            SET status = 'paid'
+            WHERE order_id = ?
+        """;
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, orderId);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Error marking order as paid", e.getMessage());
+        }
+    }
+
+    public static boolean isPaid(int orderId, ConnectionPool connectionPool)
+            throws DatabaseException {
+
+        String sql = """
+            SELECT status
+            FROM public.orders
+            WHERE order_id = ?
+        """;
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, orderId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return "paid".equals(rs.getString("status"));
+            }
+
+            throw new DatabaseException("Order not found");
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Error checking order status", e.getMessage());
         }
     }
 }

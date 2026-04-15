@@ -1,8 +1,9 @@
 package dk.services;
 
 import dk.entities.User;
-import dk.persistence.UserMapper;
 import dk.persistence.ConnectionPool;
+import dk.persistence.UserMapper;
+import dk.utils.PasswordHasher;
 
 public class AuthService {
 
@@ -14,7 +15,7 @@ public class AuthService {
             throw new Exception("User not found");
         }
 
-        if (!user.getPasswordHash().equals(password)) {
+        if (!PasswordHasher.verify(password, user.getPasswordHash())) {
             throw new Exception("Wrong password");
         }
 
