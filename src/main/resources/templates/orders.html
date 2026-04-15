@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alle ordrer — Olsker Cupcakes</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <a class="navbar-brand" th:href="@{/}">
+        <img th:src="@{/images/logo.png}" alt="Olsker Cupcakes logo" class="navbar-logo">
+        <span>Olsker<br>Cupcakes</span>
+    </a>
+    <div class="navbar-links">
+        <a th:href="@{/orders}">Ordrer</a>
+        <a th:href="@{/about}">Om os</a>
+        <th:block th:if="${session.currentUser != null}">
+            <span class="navbar-email" th:text="${session.currentUser.email}"></span>
+        </th:block>
+        <th:block th:unless="${session.currentUser != null}">
+            <a th:href="@{/login}" class="btn-outline-nav">Log ind</a>
+        </th:block>
+    </div>
+    <div class="navbar-right">
+        <a th:href="@{/checkout}" class="cart-icon">
+            <img th:src="@{/images/cart.png}" alt="Kurv">
+        </a>
+        <div class="lang-switcher">
+            <img th:src="@{/images/flag-da.png}" alt="DA" class="flag">
+            <span>DA</span>
+        </div>
+    </div>
+</nav>
+
+<!-- White card page -->
+<div style="background: var(--color-purple); min-height: calc(100vh - 64px); padding: 32px;">
+    <div class="card-page">
+
+        <!-- Header row: logo left, title centre -->
+        <div class="orders-header">
+            <img th:src="@{/images/logo.png}" alt="logo">
+            <h1>Alle ordrer</h1>
+        </div>
+
+        <!-- Error or empty state -->
+        <div th:if="${orders == null or #lists.isEmpty(orders)}"
+             style="text-align:center; color: var(--color-text-muted); padding: 48px 0; font-size: 15px;">
+            Ingen ordrer fundet.
+        </div>
+
+        <!-- Order cards — one per order -->
+        <th:block th:each="order : ${orders}">
+            <div class="order-card">
+                <div class="order-info">
+                    <div class="order-date"
+                         th:text="${#temporals.format(order.createdAt, 'dd/MM-yyyy')}">
+                        15/04-2026
+                    </div>
+                    <div class="order-customer"
+                         th:text="${order.customerName ?: 'Fornavn Efternavn'}">
+                        Fornavn Efternavn
+                    </div>
+
+                    <!-- Order lines within this order -->
+                    <div class="order-lines">
+                        <th:block th:each="line : ${order.lines}">
+                            <div class="order-line">
+                                <span th:text="${line.bottomName + ' • ' + line.toppingName}">
+                                    Chokolade • Chokoladetopping
+                                </span>
+                                <span class="line-qty"
+                                      th:text="${line.quantity + ' stk á ' + #numbers.formatDecimal(line.unitPrice, 1, 'COMMA', 2, 'POINT') + ' kr'}">
+                                    6 stk á 10,00 kr
+                                </span>
+                            </div>
+                        </th:block>
+                    </div>
+                </div>
+
+                <!-- Total price, right aligned -->
+                <div class="order-total">
+                    <span th:text="${#numbers.formatDecimal(order.total, 1, 'COMMA', 2, 'POINT')}">140,00</span>
+                    <br>kr
+                </div>
+            </div>
+        </th:block>
+
+    </div>
+</div>
+
+</body>
+</html>

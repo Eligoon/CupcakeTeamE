@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log ind — Olsker Cupcakes</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <a class="navbar-brand" th:href="@{/}">
+        <img th:src="@{/images/logo.png}" alt="Olsker Cupcakes logo" class="navbar-logo">
+        <span>Olsker<br>Cupcakes</span>
+    </a>
+    <div class="navbar-links">
+        <a th:href="@{/orders}">Ordrer</a>
+        <a th:href="@{/about}">Om os</a>
+        <a th:href="@{/login}" class="btn-outline-nav">Log ind</a>
+    </div>
+    <div class="navbar-right">
+        <div class="cart-icon">
+            <img th:src="@{/images/cart.png}" alt="Kurv">
+        </div>
+        <div class="lang-switcher">
+            <img th:src="@{/images/flag-da.png}" alt="DA" class="flag">
+            <span>DA</span>
+        </div>
+    </div>
+</nav>
+
+<!-- Auth layout: form left, photo right -->
+<div class="auth-page">
+
+    <div class="auth-card">
+        <!-- Brand inside card -->
+        <div class="auth-brand">
+            <img th:src="@{/images/logo.png}" alt="logo">
+            <span>Olsker<br>Cupcakes</span>
+        </div>
+
+        <!-- Mascot with speech bubble -->
+        <div class="auth-mascot">
+            <img th:src="@{/images/mascot-plain.png}" alt="Cupcake mascot">
+        </div>
+
+        <p class="auth-welcome">Velkommen!</p>
+        <h1 class="auth-title">Log ind</h1>
+
+        <!-- Error message -->
+        <div class="error-message" th:if="${message}" th:text="${message}"></div>
+
+        <form class="auth-form" method="post" th:action="@{/login}">
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email"
+                       id="email"
+                       name="email"
+                       placeholder="Indtast din mailadresse..."
+                       required
+                       autocomplete="email">
+            </div>
+
+            <div class="form-group">
+                <label for="password">
+                    Adgangskode
+                    <a href="#" class="forgot-link">Glemt din adgangskode?</a>
+                </label>
+                <input type="password"
+                       id="password"
+                       name="password"
+                       placeholder="Indtast dit adgangskode..."
+                       required
+                       autocomplete="current-password">
+            </div>
+
+            <div>
+                <button type="submit" class="btn-primary">
+                    Log ind <span class="arrow">→</span>
+                </button>
+            </div>
+
+        </form>
+
+        <div class="auth-footer">
+            Har du ikke en bruger? <a th:href="@{/register}" class="form-link">Opret dig</a>
+        </div>
+    </div>
+
+    <!-- Bornholm photo -->
+    <div class="auth-photo">
+        <img th:src="@{/images/bornholm.jpg}" alt="Bornholm landscape">
+    </div>
+
+</div>
+
+</body>
+</html>
