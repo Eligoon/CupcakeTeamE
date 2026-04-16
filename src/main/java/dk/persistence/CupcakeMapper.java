@@ -37,7 +37,11 @@ public class CupcakeMapper {
                 cupcakes.add(new Cupcake(
                         rs.getInt("cupcake_id"),
                         rs.getInt("bottom_id"),
-                        rs.getInt("topping_id")
+                        rs.getInt("topping_id"),
+                        rs.getString("bottom_name"),
+                        rs.getDouble("bottom_price"),
+                        rs.getString("topping_name"),
+                        rs.getDouble("topping_price")
                 ));
             }
 
