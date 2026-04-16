@@ -23,7 +23,7 @@ public class Main {
     public static void main(String[] args) {
         // Initializing Javalin and Jetty webserver
         Javalin javApp = Javalin.create(config -> {
-            config.staticFiles.add("/static");
+            config.staticFiles.add("/public");
             config.jetty.modifyServletContextHandler(handler -> handler.setSessionHandler(SessionConfig.sessionConfig()));
             config.fileRenderer(new JavalinThymeleaf(ThymeleafConfig.templateEngine()));
             config.staticFiles.add("/templates");
