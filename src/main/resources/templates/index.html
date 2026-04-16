@@ -4,191 +4,177 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Olsker Cupcakes</title>
+
     <link rel="stylesheet" th:href="@{/css/styles.css}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
+
 <body>
 
-<!-- nav -->
+<!-- NAV -->
 <nav class="navbar">
+
     <a class="navbar-brand" th:href="@{/}">
         <img th:src="@{/images/logo.png}" alt="Olsker Cupcakes logo" class="navbar-logo">
         <span>Olsker<br>Cupcakes</span>
     </a>
+
     <div class="navbar-links">
+
         <a th:href="@{/orders}">Ordrer</a>
         <a th:href="@{/about}">Om os</a>
 
         <th:block th:if="${session.currentUser != null}">
-            <span class="navbar-email" th:text="${session.currentUser.email}"></span>
+            <span class="navbar-email"
+                  th:text="${session.currentUser.email}"></span>
         </th:block>
+
         <th:block th:unless="${session.currentUser != null}">
             <a th:href="@{/login}" class="btn-outline-nav">Log ind</a>
         </th:block>
+
     </div>
+
     <div class="navbar-right">
-        <a th:href="@{/checkout}" class="cart-icon">
+
+        <a th:href="@{/orders}" class="cart-icon">
             <img th:src="@{/images/cart.png}" alt="Kurv">
-            <span class="cart-badge" id="cartBadge" style="display:none">0</span>
         </a>
-        <div class="lang-switcher">
-            <img th:src="@{/images/flag-da.png}" alt="DA" class="flag">
-            <span>DA</span>
-        </div>
+
     </div>
 </nav>
 
+<!-- HERO -->
 <div class="hero">
-    <p class="hero-text">De bedste cupcakes fra Bornholm! Vælg og bestil her:</p>
+    <p class="hero-text">De bedste cupcakes fra Bornholm!</p>
     <h1 class="hero-title">Velkommen ombord!</h1>
-
-    <div class="hero-mascots">
-        <img th:src="@{/images/mascot-sprinkle.png}" alt="cupcake">
-        <img th:src="@{/images/mascot-grey-sprinke.png}" alt="cupcake">
-        <div class="hero-bubble" style="position:relative">
-            <span class="speech-bubble">Byg din egen!</span>
-            <img th:src="@{/images/mascot-pink.png}" alt="cupcake">
-        </div>
-        <img th:src="@{/images/mascot-grey-sprinkle-rotated.png}" alt="cupcake">
-        <img th:src="@{/images/mascot-sprinkle-rotated.png}" alt="cupcake">
-    </div>
 </div>
 
-<!-- content -->
+<!-- BUILDER -->
 <div class="index-content">
+
     <div class="build-section">
-        <p class="section-title">Byg din cupcake</p>
-        <!-- bottom-->
-        <div class="cupcake-builder">
-            <div class="form-group">
-                <label for="bottomSelect">Bund</label>
-                <select id="bottomSelect" onchange="updatePrice()">
-                    <option value="">Vælg bund</option>
-                    <th:block th:each="bottom : ${bottoms}">
-                        <option th:value="${bottom.bottomId}"
-                                th:data-price="${bottom.price}"
-                                th:text="${bottom.name + ' - ' + #numbers.formatDecimal(bottom.price, 1, 'COMMA', 2, 'POINT') + ' kr'}">
-                        </option>
-                    </th:block>
-                </select>
+
+        <h2>Byg din cupcake</h2>
+
+        <!-- FORM -->
+        <form method="post" th:action="@{/orders/create}">
+
+            <!-- BOTTOM -->
+            <label>Bund</label>
+            <select id="bottomSelect" name="bottomId" onchange="updatePrice()">
+                <option value="">Vælg bund</option>
+
+                <th:block th:each="bottom : ${bottoms}">
+                    <option th:value="${bottom.bottomId}"
+                            th:data-price="${bottom.price}"
+                            th:text="${bottom.name + ' - ' + bottom.price + ' kr'}">
+                    </option>
+                </th:block>
+            </select>
+
+            <!-- TOPPING -->
+            <label>Topping</label>
+            <select id="toppingSelect" name="toppingId" onchange="updatePrice()">
+                <option value="">Vælg topping</option>
+
+                <th:block th:each="topping : ${toppings}">
+                    <option th:value="${topping.toppingId}"
+                            th:data-price="${topping.price}"
+                            th:text="${topping.name + ' - ' + topping.price + ' kr'}">
+                    </option>
+                </th:block>
+            </select>
+
+            <!-- QTY -->
+            <label>Antal</label>
+
+            <div class="builder-qty">
+                <button type="button" onclick="changeQty(-1)">−</button>
+
+                <span id="qtyDisplay">0</span>
+
+                <button type="button" onclick="changeQty(1)">+</button>
             </div>
 
-            <!-- topping-->
-            <div class="form-group">
-                <label for="toppingSelect">Topping</label>
-                <select id="toppingSelect" onchange="updatePrice()">
-                    <option value="">Vælg topping</option>
-                    <th:block th:each="topping : ${toppings}">
-                        <option th:value="${topping.toppingId}"
-                                th:data-price="${topping.price}"
-                                th:text="${topping.name + ' — ' + #numbers.formatDecimal(topping.price, 1, 'COMMA', 2, 'POINT') + ' kr'}">
-                        </option>
-                    </th:block>
-                </select>
-            </div>
-
-            <!-- quantity -->
-            <div class="form-group">
-                <label>Antal</label>
-                <div class="builder-qty">
-                    <button type="button" class="qty-btn" onclick="changeQty(-1)">−</button>
-                    <div class="qty-display" id="qtyDisplay">0</div>
-                    <button type="button" class="qty-btn" onclick="changeQty(1)">+</button>
-                    <span class="qty-unit">stk</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- show price-->
-        <div class="price-preview-box">
-            <div>
-                <div class="label">Stykpris</div>
-                <div class="sublabel" id="priceDesc">Vælg bund og topping</div>
-            </div>
-            <div class="price-value" id="priceDisplay">− kr</div>
-        </div>
-
-        <!-- add to cart -->
-        <form method="post" th:action="@{/cart/add}" style="text-align:center">
-            <input type="hidden" name="bottomId" id="hiddenBottom">
-            <input type="hidden" name="toppingId" id="hiddenTopping">
             <input type="hidden" name="quantity" id="hiddenQty" value="0">
-            <button type="submit" class="add-to-cart-btn">
-                <img th:src="@{/images/cart.png}" alt=""> Læg i kurv
+
+            <!-- PRICE -->
+            <p id="priceDisplay">− kr</p>
+
+            <!-- ADD -->
+            <button type="submit" class="add-to-cart-btn" onclick="return validateForm()">
+                Læg i kurv
             </button>
+
         </form>
     </div>
 
-    <!-- popular combinations -->
+    <!-- POPULAR -->
     <div class="popular-section">
-        <hr class="divider">
-        <p class="section-title">Populære kombinationer</p>
+
+        <h2>Populære kombinationer</h2>
 
         <div class="combos-grid">
-            <!-- cupcakes -->
+
             <th:block th:if="${cupcakes != null}" th:each="cupcake : ${cupcakes}">
                 <div class="combo-card">
-                    <div class="combo-dot" th:style="'background:' + ${cupcake.dotColor ?: '#D4B8F0'}"></div>
-                    <div class="combo-name" th:text="${cupcake.name}">Olsker favorit</div>
-                    <div class="combo-desc" th:text="${cupcake.bottomName + ' • ' + cupcake.toppingName}">Vanilje • Blåbærtopping</div>
-                    <div class="combo-price" th:text="${#numbers.formatDecimal(cupcake.price, 1, 'COMMA', 2, 'POINT') + ' kr'}">10,00 kr</div>
+
+                    <div class="combo-name" th:text="${cupcake.name}"></div>
+
+                    <div class="combo-desc"
+                         th:text="${cupcake.bottomName + ' • ' + cupcake.toppingName}">
+                    </div>
+
+                    <div class="combo-price"
+                         th:text="${cupcake.price + ' kr'}">
+                    </div>
+
                 </div>
             </th:block>
 
-            <!-- default popular combination -->
             <th:block th:unless="${cupcakes != null}">
-                <div class="combo-card">
-                    <div class="combo-dot" style="background:#F4A7C0"></div>
-                    <div class="combo-name">Olsker favorit</div>
-                    <div class="combo-desc">Vanilje • Blåbærtopping</div>
-                    <div class="combo-price">10,00 kr</div>
-                </div>
-                <div class="combo-card">
-                    <div class="combo-dot" style="background:#4B2E83"></div>
-                    <div class="combo-name">Blueberry dream</div>
-                    <div class="combo-desc">Mandel • Blåbærtopping</div>
-                    <div class="combo-price">12,00 kr</div>
-                </div>
+                <p>Ingen populære cupcakes endnu</p>
             </th:block>
+
         </div>
     </div>
+
 </div>
 
+<!-- SCRIPT -->
 <script>
     let qty = 0;
 
     function changeQty(delta) {
         qty = Math.max(0, qty + delta);
-        document.getElementById('qtyDisplay').textContent = qty;
-        document.getElementById('hiddenQty').value = qty;
+        document.getElementById("qtyDisplay").textContent = qty;
+        document.getElementById("hiddenQty").value = qty;
         updatePrice();
     }
 
     function updatePrice() {
-        const bottomSel = document.getElementById('bottomSelect');
-        const toppingSel = document.getElementById('toppingSelect');
 
-        const bottomOpt = bottomSel.options[bottomSel.selectedIndex];
-        const toppingOpt = toppingSel.options[toppingSel.selectedIndex];
+        const bottom = document.getElementById("bottomSelect");
+        const topping = document.getElementById("toppingSelect");
 
-        const bottomPrice  = parseFloat(bottomOpt?.dataset?.price) || 0;
-        const toppingPrice = parseFloat(toppingOpt?.dataset?.price) || 0;
+        const bPrice = parseFloat(bottom.selectedOptions[0]?.dataset?.price || 0);
+        const tPrice = parseFloat(topping.selectedOptions[0]?.dataset?.price || 0);
 
-        document.getElementById('hiddenBottom').value  = bottomSel.value;
-        document.getElementById('hiddenTopping').value = toppingSel.value;
-
-        if (bottomPrice > 0 && toppingPrice > 0) {
-            const unit  = bottomPrice + toppingPrice;
-            const total = unit * qty;
-            document.getElementById('priceDisplay').textContent =
-                unit.toFixed(2).replace('.', ',') + ' kr' + (qty > 1 ? ' × ' + qty + ' = ' + total.toFixed(2).replace('.', ',') + ' kr' : '');
-            document.getElementById('priceDesc').textContent =
-                bottomOpt.text.split(' —')[0] + ' + ' + toppingOpt.text.split(' —')[0];
+        if (bPrice && tPrice) {
+            const unit = bPrice + tPrice;
+            document.getElementById("priceDisplay").textContent =
+                unit.toFixed(2) + " kr";
         } else {
-            document.getElementById('priceDisplay').textContent = '− kr';
-            document.getElementById('priceDesc').textContent = 'Vælg bund og topping';
+            document.getElementById("priceDisplay").textContent = "− kr";
         }
+    }
+
+    function validateForm() {
+        if (qty <= 0) {
+            alert("Vælg antal cupcakes");
+            return false;
+        }
+        return true;
     }
 </script>
 

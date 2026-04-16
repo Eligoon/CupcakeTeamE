@@ -10,11 +10,18 @@ public class AuthController {
 
     public static void addRoutes(Javalin app, ConnectionPool cp) {
 
-        app.get("/login", ctx -> ctx.render("login.html"));
+        // show login page
+        app.get("/login", ctx -> showLogin(ctx));
 
+        // handle login
         app.post("/login", ctx -> login(ctx, cp));
 
+        // logout
         app.get("/logout", ctx -> logout(ctx));
+    }
+
+    private static void showLogin(Context ctx) {
+        ctx.render("login.html");
     }
 
     private static void login(Context ctx, ConnectionPool cp) {

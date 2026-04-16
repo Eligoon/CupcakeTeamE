@@ -10,6 +10,8 @@ public class CartController {
 
     public static void addRoutes(Javalin app, ConnectionPool cp) {
 
+        // OPTIONAL: only keep if you truly need API later
+        // otherwise REMOVE THIS CLASS COMPLETELY
         app.get("/api/cart/{orderId}", ctx -> getCart(ctx, cp));
     }
 
@@ -19,8 +21,11 @@ public class CartController {
 
         try {
             ctx.json(CartService.getCart(orderId, cp));
+
         } catch (DatabaseException e) {
-            ctx.status(500).result("Error fetching cart: " + e.getMessage());
+            ctx.status(500).json(
+                    java.util.Map.of("error", e.getMessage())
+            );
         }
     }
 }
