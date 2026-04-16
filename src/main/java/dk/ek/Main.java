@@ -8,6 +8,7 @@ import dk.controllers.OrderController;
 import dk.controllers.UserController;
 import dk.persistence.ConnectionPool;
 import io.javalin.Javalin;
+import io.javalin.http.staticfiles.Location;
 import io.javalin.rendering.template.JavalinThymeleaf;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -23,7 +24,7 @@ public class Main {
     public static void main(String[] args) {
         // Initializing Javalin and Jetty webserver
         Javalin javApp = Javalin.create(config -> {
-            config.staticFiles.add("/public");
+            config.staticFiles.add("/public", Location.CLASSPATH);
             config.jetty.modifyServletContextHandler(handler -> handler.setSessionHandler(SessionConfig.sessionConfig()));
             config.fileRenderer(new JavalinThymeleaf(ThymeleafConfig.templateEngine()));
             config.staticFiles.add("/templates");
