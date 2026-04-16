@@ -37,7 +37,9 @@ public class AuthServiceTest {
                 0,
                 email,
                 hashedPassword,
-                "user"
+                "user",
+                "Gås",
+                "The Hungry"
         );
 
         UserMapper.createUser(testUser, cp);
