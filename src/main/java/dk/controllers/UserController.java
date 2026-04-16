@@ -18,9 +18,11 @@ public class UserController {
 
         String email = ctx.formParam("email");
         String password = ctx.formParam("password");
+        String firstName = ctx.formParam("firstName");
+        String lastName = ctx.formParam("lastName");
 
         try {
-            UserService.registerUser(email, password, "customer", cp);
+            UserService.registerUser(email, password, "customer", firstName, lastName, cp);
 
             ctx.redirect("/login");
 

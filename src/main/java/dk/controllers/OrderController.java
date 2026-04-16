@@ -37,23 +37,6 @@ public class OrderController {
             return;
         }
 
-        try {
-            List<Order> orders = OrderMapper.getOrdersByUser(user.getUserId(), cp);
-            for (Order order : orders) {
-                List<CupcakeOrders> lines = CupcakeOrdersMapper.getOrdersByOrderId(order.getOrderId(), cp);
-                order.setLines(lines);
-                double total = lines.stream()
-                        .mapToDouble(l -> l.getUnitPrice() * l.getQuantity())
-                        .sum();
-
-                order.setTotal(total);
-            }
-            ctx.attribute("orders", orders);
-            ctx.render("admin/orders.html");
-        } catch (DatabaseException e) {
-            ctx.attribute("message", e.getMessage());
-            ctx.render("admin/orders.html");
-        }
     }
 
     // US-4

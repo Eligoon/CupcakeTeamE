@@ -9,14 +9,14 @@ import dk.utils.PasswordHasher;
 
 public class UserService {
 
-    public static void registerUser(String email, String password, String role, ConnectionPool cp)
+    public static void registerUser(String email, String password, String role, String firstName, String lastName, ConnectionPool cp)
             throws DatabaseException {
 
         // 1. hash password
         String hashedPassword = PasswordHasher.hash(password);
 
         // 2. create user
-        User user = new User(0, email, hashedPassword, role);
+        User user = new User(0, email, hashedPassword, role, null, null);
         UserMapper.createUser(user, cp);
 
         // 3. fetch created user (to get ID)

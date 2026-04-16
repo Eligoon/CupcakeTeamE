@@ -29,7 +29,9 @@ public class UserMapper {
                         rs.getInt("user_id"),
                         rs.getString("email"),
                         rs.getString("password_hash"),
-                        rs.getString("role")
+                        rs.getString("role"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name")
                 );
             }
 
@@ -82,7 +84,9 @@ public class UserMapper {
                         rs.getInt("user_id"),
                         rs.getString("email"),
                         rs.getString("password_hash"),
-                        rs.getString("role")
+                        rs.getString("role"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name")
                 ));
             }
 
