@@ -9,7 +9,7 @@ public class ThymeleafConfig
     {
         TemplateEngine templateEngine = new TemplateEngine();
         ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
-        templateResolver.setPrefix("templates/");
+        templateResolver.setPrefix("/templates/");
         templateResolver.setSuffix(".html");
         templateEngine.setTemplateResolver(templateResolver);
         return templateEngine;
