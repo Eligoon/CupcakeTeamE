@@ -10,7 +10,7 @@
 </head>
 <body>
 
-<!-- Navbar -->
+<!-- nav -->
 <nav class="navbar">
     <a class="navbar-brand" th:href="@{/}">
         <img th:src="@{/images/logo.png}" alt="Olsker Cupcakes logo" class="navbar-logo">
@@ -55,7 +55,7 @@
     </div>
 </div>
 
-<!-- Content -->
+<!-- content -->
 <div class="index-content">
     <div class="build-section">
         <p class="section-title">Byg din cupcake</p>
@@ -66,7 +66,7 @@
                 <select id="bottomSelect" onchange="updatePrice()">
                     <option value="">Vælg bund</option>
                     <th:block th:each="bottom : ${bottoms}">
-                        <option th:value="{bottom.bottomId}"
+                        <option th:value="${bottom.bottomId}"
                                 th:data-price="${bottom.price}"
                                 th:text="${bottom.name + ' - ' + #numbers.formatDecimal(bottom.price, 1, 'COMMA', 2, 'POINT') + ' kr'}">
                         </option>
@@ -126,7 +126,7 @@
         <p class="section-title">Populære kombinationer</p>
 
         <div class="combos-grid">
-            <!-- Rendered from controller — cupcakes with names -->
+            <!-- cupcakes -->
             <th:block th:if="${cupcakes != null}" th:each="cupcake : ${cupcakes}">
                 <div class="combo-card">
                     <div class="combo-dot" th:style="'background:' + ${cupcake.dotColor ?: '#D4B8F0'}"></div>

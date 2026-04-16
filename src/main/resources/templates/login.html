@@ -10,7 +10,7 @@
 </head>
 <body>
 
-<!-- Navbar -->
+<!-- nav -->
 <nav class="navbar">
     <a class="navbar-brand" th:href="@{/}">
         <img th:src="@{/images/logo.png}" alt="Olsker Cupcakes logo" class="navbar-logo">
@@ -32,7 +32,7 @@
     </div>
 </nav>
 
-<!-- Auth layout: form left, photo right -->
+<!-- layout -->
 <div class="auth-page">
 
     <div class="auth-card">
@@ -42,15 +42,15 @@
             <span>Olsker<br>Cupcakes</span>
         </div>
 
-        <!-- Mascot with speech bubble -->
+        <!-- mascot middle -->
         <div class="auth-mascot">
-            <img th:src="@{/images/mascot-plain.png}" alt="Cupcake mascot">
+            <img th:src="@{/images/mascot-pink.png}" alt="Cupcake mascot">
         </div>
 
         <p class="auth-welcome">Velkommen!</p>
         <h1 class="auth-title">Log ind</h1>
 
-        <!-- Error message -->
+        <!-- error -->
         <div class="error-message" th:if="${message}" th:text="${message}"></div>
 
         <form class="auth-form" method="post" th:action="@{/login}">
@@ -91,9 +91,9 @@
         </div>
     </div>
 
-    <!-- Bornholm photo -->
+    <!-- bornholm photo -->
     <div class="auth-photo">
-        <img th:src="@{/images/bornholm.jpg}" alt="Bornholm landscape">
+        <img th:src="@{/images/bornholm.png}" alt="Bornholm landscape">
     </div>
 
 </div>
