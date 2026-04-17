@@ -9,7 +9,19 @@
 
 <nav class="navbar">
     <a th:href="@{/}">← Tilbage</a>
+
     <span>Mine ordrer</span>
+
+    <div style="margin-left:auto;">
+        <th:block th:if="${session.currentUser != null}">
+            <span th:text="${session.currentUser.email}"></span>
+            <a th:href="@{/logout}" style="margin-left:10px;">Log ud</a>
+        </th:block>
+        <th:block th:unless="${session.currentUser != null}">
+            <a th:href="@{/login}">Log ind</a>
+            <a th:href="@{/logout}" style="margin-left:10px;" class="btn-outline-nav">Log ud</a>
+        </th:block>
+    </div>
 </nav>
 
 <div style="padding: 32px; max-width: 800px; margin: auto;">
