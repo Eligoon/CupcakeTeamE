@@ -22,6 +22,7 @@
 
         <th:block th:if="${session.currentUser != null}">
             <span class="navbar-email" th:text="${session.currentUser.email}"></span>
+            <a th:href="@{/logout}" class="btn-outline-nav">Log ud</a>
         </th:block>
         <th:block th:unless="${session.currentUser != null}">
             <a th:href="@{/login}" class="btn-outline-nav">Log ind</a>
