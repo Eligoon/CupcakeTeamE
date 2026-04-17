@@ -12,6 +12,8 @@ public class UserController {
         app.get("/register", ctx -> ctx.render("register.html"));
 
         app.post("/register", ctx -> register(ctx, cp));
+
+        app.get("/logout", ctx-> logout(ctx));
     }
 
     private static void register(Context ctx, ConnectionPool cp) {
@@ -30,5 +32,10 @@ public class UserController {
             ctx.attribute("message", e.getMessage());
             ctx.render("register.html");
         }
+    }
+
+    private static void logout(Context ctx) {
+        ctx.req().getSession().invalidate();
+        ctx.redirect("/login");
     }
 }
