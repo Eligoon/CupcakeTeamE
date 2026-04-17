@@ -13,8 +13,6 @@ public class UserService {
             String email,
             String password,
             String role,
-            String firstName,
-            String lastName,
             ConnectionPool cp
     ) throws DatabaseException {
 

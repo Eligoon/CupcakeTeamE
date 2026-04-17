@@ -13,7 +13,7 @@ public class UserMapper {
             throws DatabaseException {
 
         String sql = """
-            SELECT user_id, email, password_hash, role, first_name, last_name
+            SELECT user_id, email, password_hash, role
             FROM public.users
             WHERE email = ?
         """;
