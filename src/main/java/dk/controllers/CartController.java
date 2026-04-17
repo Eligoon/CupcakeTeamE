@@ -40,7 +40,12 @@ public class CartController {
 
 
         try {
-            int orderId = OrderService.createOrder(user.getUserId(), cp);
+            Integer orderId = ctx.sessionAttribute("currentOrderId");
+
+            if (orderId == null) {
+                orderId = OrderService.createOrder(user.getUserId(), cp);
+                ctx.sessionAttribute("currentOrderId", orderId);
+            }
 
             OrderService.addCupcakeToOrder(orderId,cupcakeId,quantity, cp);
 
