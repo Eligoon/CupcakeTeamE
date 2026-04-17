@@ -56,40 +56,16 @@
         <!-- order  -->
         <th:block th:each="order : ${orders}">
             <div class="order-card">
-                <div class="order-info">
-                    <div class="order-date"
-                         th:text="${#temporals.format(order.createdAt, 'dd/MM-yyyy')}">
-                        15/04-2026
-                    </div>
-                    <div class="order-customer"
-                         th:text="${order.customerName ?: 'Fornavn Efternavn'}">
-                        Fornavn Efternavn
-                    </div>
+                <div>
+                    Ordre ID: <span th:text="${order.orderId}"></span><br>
+                    Dato: <span th:text="${#temporals.format(order.createdAt, 'dd/MM-yyyy')}"></span><br>
+                    Status: <span th:text="${order.status}"></span><br>
 
-                    <!-- Order lines within this order -->
-                    <div class="order-lines">
-                        <th:block th:each="line : ${order.lines}">
-                            <div class="order-line">
-                                <span th:text="${line.bottomName + ' • ' + line.toppingName}">
-                                    Chokolade • Chokoladetopping
-                                </span>
-                                <span class="line-qty"
-                                      th:text="${line.quantity + ' stk á ' + #numbers.formatDecimal(line.unitPrice, 1, 'COMMA', 2, 'POINT') + ' kr'}">
-                                    6 stk á 10,00 kr
-                                </span>
-                            </div>
-                        </th:block>
-                    </div>
-                </div>
-
-                <!-- total price -->
-                <div class="order-total">
-                    <span th:text="${#numbers.formatDecimal(order.total, 1, 'COMMA', 2, 'POINT')}">140,00</span>
-                    <br>kr
+                    Total:
+                    <span th:text="${#numbers.formatDecimal(totals[order.orderId], 1, 'COMMA', 2, 'POINT')}"></span> kr
                 </div>
             </div>
         </th:block>
-
     </div>
 </div>
 

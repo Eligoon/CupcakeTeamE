@@ -10,4 +10,16 @@ public class Bottom {
         this.name = name;
         this.price = price;
     }
+
+    public int getBottomId() {
+        return bottomId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
 }

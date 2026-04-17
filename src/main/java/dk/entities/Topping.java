@@ -10,4 +10,16 @@ public class Topping {
         this.name = name;
         this.price = price;
     }
+
+    public int getToppingId() {
+        return toppingId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
 }

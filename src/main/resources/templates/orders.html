@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="da">
+<head>
+    <meta charset="UTF-8">
+    <title>Mine ordrer — Olsker Cupcakes</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+
+<nav class="navbar">
+    <a th:href="@{/}">← Tilbage</a>
+    <span>Mine ordrer</span>
+</nav>
+
+<div style="padding: 32px; max-width: 800px; margin: auto;">
+
+    <h1>Mine ordrer</h1>
+
+    <!-- empty state -->
+    <div th:if="${orders == null or #lists.isEmpty(orders)}">
+        Du har ingen ordrer endnu.
+    </div>
+
+    <!-- orders -->
+    <th:block th:each="order : ${orders}">
+        <div style="border:1px solid #ddd; padding:16px; margin-bottom:16px; border-radius:8px;">
+
+            <strong>Ordre #<span th:text="${order.orderId}"></span></strong><br>
+
+            Dato:
+            <span th:text="${#temporals.format(order.createdAt, 'dd/MM-yyyy')}"></span><br>
+
+            Status:
+            <span th:text="${order.status}"></span><br>
+
+            <br>
+
+            Total:
+            <strong>
+                <span th:text="${#numbers.formatDecimal(totals[order.orderId], 1, 'COMMA', 2, 'POINT')}"></span>
+                kr
+            </strong>
+
+        </div>
+    </th:block>
+
+</div>
+
+</body>
+</html>

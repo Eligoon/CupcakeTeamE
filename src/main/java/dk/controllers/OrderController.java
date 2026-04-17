@@ -12,7 +12,9 @@ import dk.services.OrderService;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class OrderController {
 
@@ -35,6 +37,36 @@ public class OrderController {
         if (user == null) {
             ctx.redirect("/login");
             return;
+        }
+
+        try {
+            List<Order> orders;
+
+            if ("admin".equals(user.getRole())) {
+                orders = OrderMapper.getAllOrders(cp);
+            } else {
+                orders = OrderMapper.getOrdersByUser(user.getUserId(), cp);
+            }
+
+            Map<Integer, Double> totals = new HashMap<>();
+
+            for (Order order : orders) {
+                double total = OrderMapper.calculateTotal(order.getOrderId(), cp);
+                totals.put(order.getOrderId(), total);
+            }
+
+
+            ctx.attribute("orders", orders);
+            ctx.attribute("totals", totals);
+
+            if ("admin".equals(user.getRole())) {
+                ctx.render("admin/orders.html");
+            } else {
+                ctx.render("orders.html");
+            }
+
+        } catch (Exception e) {
+            ctx.result("Error loading orders: " + e.getMessage());
         }
 
     }

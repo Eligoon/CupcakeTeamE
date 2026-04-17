@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Olsker Cupcakes</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 </head>
 <body>
 
@@ -45,7 +45,7 @@
 
     <div class="hero-mascots">
         <img th:src="@{/images/mascot-sprinkle.png}" alt="cupcake">
-        <img th:src="@{/images/mascot-grey-sprinke.png}" alt="cupcake">
+        <img th:src="@{/images/mascot-grey-sprinkle.png}" alt="cupcake">
         <div class="hero-bubble" style="position:relative">
             <span class="speech-bubble">Byg din egen!</span>
             <img th:src="@{/images/mascot-pink.png}" alt="cupcake">
@@ -111,8 +111,7 @@
 
         <!-- add to cart -->
         <form method="post" th:action="@{/cart/add}" style="text-align:center">
-            <input type="hidden" name="bottomId" id="hiddenBottom">
-            <input type="hidden" name="toppingId" id="hiddenTopping">
+            <input type="hidden" name="cupcakeId" id="hiddenCupcake">
             <input type="hidden" name="quantity" id="hiddenQty" value="0">
             <button type="submit" class="add-to-cart-btn">
                 <img th:src="@{/images/cart.png}" alt=""> Læg i kurv
@@ -129,7 +128,7 @@
             <!-- cupcakes -->
             <th:block th:if="${cupcakes != null}" th:each="cupcake : ${cupcakes}">
                 <div class="combo-card">
-                    <div class="combo-dot" th:style="'background:' + ${cupcake.dotColor ?: '#D4B8F0'}"></div>
+                    <div class="combo-dot" th:style="'background:#D4B8F0'"></div>
                     <div class="combo-name" th:text="${cupcake.name}">Olsker favorit</div>
                     <div class="combo-desc" th:text="${cupcake.bottomName + ' • ' + cupcake.toppingName}">Vanilje • Blåbærtopping</div>
                     <div class="combo-price" th:text="${#numbers.formatDecimal(cupcake.price, 1, 'COMMA', 2, 'POINT') + ' kr'}">10,00 kr</div>
@@ -155,7 +154,9 @@
     </div>
 </div>
 
-<script>
+<script th:inline="javascript">
+    const cupcakes = /*[[${cupcakes}]]*/ [];
+
     let qty = 0;
 
     function changeQty(delta) {
@@ -175,20 +176,27 @@
         const bottomPrice  = parseFloat(bottomOpt?.dataset?.price) || 0;
         const toppingPrice = parseFloat(toppingOpt?.dataset?.price) || 0;
 
-        document.getElementById('hiddenBottom').value  = bottomSel.value;
-        document.getElementById('hiddenTopping').value = toppingSel.value;
-
         if (bottomPrice > 0 && toppingPrice > 0) {
             const unit  = bottomPrice + toppingPrice;
             const total = unit * qty;
             document.getElementById('priceDisplay').textContent =
                 unit.toFixed(2).replace('.', ',') + ' kr' + (qty > 1 ? ' × ' + qty + ' = ' + total.toFixed(2).replace('.', ',') + ' kr' : '');
             document.getElementById('priceDesc').textContent =
-                bottomOpt.text.split(' —')[0] + ' + ' + toppingOpt.text.split(' —')[0];
+                bottomOpt.text.split(' -')[0] + ' + ' + toppingOpt.text.split(' -')[0];
         } else {
             document.getElementById('priceDisplay').textContent = '− kr';
             document.getElementById('priceDesc').textContent = 'Vælg bund og topping';
         }
+
+        const cupcakeId = findCupcakeId(bottomSel.value, toppingSel.value);
+        document.getElementById('hiddenCupcake').value = cupcakeId || "";
+    }
+
+    function findCupcakeId(bottomId, toppingId) {
+        const match = cupcakes.find(c =>
+        c.bottomId == bottomId && c.toppingId == toppingId
+        );
+        return match ? match.cupcakeId : null;
     }
 </script>
 

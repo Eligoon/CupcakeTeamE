@@ -90,13 +90,13 @@
                         <label for="firstName">Fornavn</label>
                         <input type="text" id="firstName" name="firstName"
                                placeholder="Fornavn"
-                               th:value="${session.currentUser.firstName ?: ''}">
+                               th:value="${session.currentUser.email}">
                     </div>
                     <div class="form-group">
                         <label for="lastName">Efternavn</label>
                         <input type="text" id="lastName" name="lastName"
                                placeholder="Efternavn"
-                               th:value="${session.currentUser.lastName ?: ''}">
+                               th:value="${session.currentUser.email}">
                     </div>
                 </div>
 
@@ -151,10 +151,8 @@
         <!-- items in cart -->
         <th:block th:each="item : ${cartItems}">
             <div class="cart-item">
-                <!-- Color dot per topping (passed from controller or use default) -->
-                <div class="cart-item-dot"
-                     th:style="'background:' + (${item.dotColor} ?: '#4B2E83')">
-                </div>
+                <!-- use default color for cart items-->
+                <div class="cart-item-dot" style="background: #4B2E83"></div>
                 <div class="cart-item-info">
                     <div class="cart-item-name"
                          th:text="${item.bottomName + ' ' + item.toppingName}">

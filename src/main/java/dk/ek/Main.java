@@ -2,10 +2,7 @@ package dk.ek;
 
 import dk.config.SessionConfig;
 import dk.config.ThymeleafConfig;
-import dk.controllers.AuthController;
-import dk.controllers.CartController;
-import dk.controllers.OrderController;
-import dk.controllers.UserController;
+import dk.controllers.*;
 import dk.persistence.ConnectionPool;
 import io.javalin.Javalin;
 import io.javalin.http.staticfiles.Location;
@@ -27,13 +24,14 @@ public class Main {
             config.staticFiles.add("/public", Location.CLASSPATH);
             config.jetty.modifyServletContextHandler(handler -> handler.setSessionHandler(SessionConfig.sessionConfig()));
             config.fileRenderer(new JavalinThymeleaf(ThymeleafConfig.templateEngine()));
-            config.staticFiles.add("/templates");
+            // config.staticFiles.add("/templates");
         }).start(7070);
 
 
         // Routing
         AuthController.addRoutes(javApp, connectionPool);
         CartController.addRoutes(javApp, connectionPool);
+        HomeController.addRoutes(javApp, connectionPool);
         OrderController.addRoutes(javApp, connectionPool);
         UserController.addRoutes(javApp, connectionPool);
 
