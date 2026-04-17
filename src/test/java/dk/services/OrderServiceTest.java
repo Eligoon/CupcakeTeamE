@@ -33,9 +33,7 @@ public class OrderServiceTest {
                 0,
                 "user@test.dk",
                 PasswordHasher.hash("1234"),
-                "user",
-                "Musling",
-                "The NinjaCat"
+                "user"
         );
 
         UserMapper.createUser(user, cp);

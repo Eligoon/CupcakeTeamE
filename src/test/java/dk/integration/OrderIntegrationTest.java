@@ -36,7 +36,7 @@ public class OrderIntegrationTest {
             st.execute("DELETE FROM accounts");
         }
 
-        UserService.registerUser("user@test.dk", "1234", "user", "testUser", "McTest", cp);
+        UserService.registerUser("user@test.dk", "1234", "user", cp);
 
         User created = UserMapper.getUserByEmail("user@test.dk", cp);
         userId = created.getUserId();
